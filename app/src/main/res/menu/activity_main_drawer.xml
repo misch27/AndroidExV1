@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Map" />
+        <item
+            android:id="@+id/nav_calculator"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Calculator" />
+        <item
+            android:id="@+id/nav_camera"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Camera" />
+        <item
+            android:id="@+id/nav_manage"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Reposit" />
+        <item
+            android:id="@+id/nav_contacts"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Contacts" />
+    </group>
+
+</menu>
