@@ -14,6 +14,7 @@ import java.util.ArrayList;
 public class AuthGitHub extends Activity implements IAuthActivity{
     private IAuthPresenter iAuthPresenter;
     private TextInputEditText login, password;
+    private ArrayList<String> repoList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,7 @@ public class AuthGitHub extends Activity implements IAuthActivity{
 
     @Override
     public void setRepo(ArrayList<String> repoList) {
-
+        this.repoList = repoList;
     }
 
 
@@ -77,7 +78,9 @@ public class AuthGitHub extends Activity implements IAuthActivity{
                 startActivity(intent);
             } else {
                 Intent intent = new Intent(AuthGitHub.this, MenuActivity.class);
-                //тут допилю в ближайшие часы нормальную аутенфикацию. Надо передать репоЛист.
+                intent.putExtra("login", login);
+                intent.putExtra("repoList", repoList);
+                startActivity(intent);
             }
         }
     }
