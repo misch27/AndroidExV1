@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.misch.androidexv1.calculatorAPI.CalculatorFragment;
 import com.example.misch.androidexv1.cameraAPI.SensorFragment;
@@ -34,6 +35,8 @@ public class MenuActivity extends AppCompatActivity
         return contextOfApplication;
     }
     public static ArrayList<String> repoList;
+
+    private TextView username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,8 @@ public class MenuActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        username = (TextView) findViewById(R.id.usernameAndroid);
+        username.setText(getIntent().getExtras().getString("login"));
         return true;
     }
 
@@ -78,7 +83,6 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
