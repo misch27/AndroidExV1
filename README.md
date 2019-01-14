@@ -37,21 +37,21 @@ SplashScreen
 предлагается ввести код, после чего происходит вход, если же её нет то вход
 происходит без запроса кода.
 
-![https://c.radikal.ru/c16/1901/f3/a8feb832a6aa.png](media/26b78ba5b26bf3584d6fb12c6c6ca1f3.jpg)
+![img1](https://i.imgur.com/RBtZneD.png)
 
 Просьба ввода второго фактора:
 
-![https://pp.userapi.com/c847020/v847020047/173148/ugQaMy8unWY.jpg](media/30138584a290856bcb191f099951117f.jpg)
+![img2](https://i.imgur.com/Ng0ZWPF.png)
 
 После входа открывается layout с названием проекта и значком меню слева сверху
 
-![https://pp.userapi.com/c844724/v844724663/17cfd6/Cs9WLqciSSE.jpg](media/934ad12f8ba2169fc722828c3ab471ec.jpg)
+![img3](https://i.imgur.com/Q7YMb9q.png)
 
 В меню реализованы пункты из задания : Карта, калькулятор(собственное добавление
 к проекту) , контракты, датчики и камера, список репозиториев, контакты и выход
 из приложения
 
-![https://pp.userapi.com/c845217/v845217047/178a36/_SbLZilY2Z0.jpg](media/13e98f51b8d7e8cf3f2beeea8c5f774e.jpg)
+![img4](https://i.imgur.com/YLu5Ii9.png)
 
 **Карта**:
 
@@ -59,7 +59,7 @@ SplashScreen
 Стромынке, режим передвижения – на машине, компас, кнопки приближения и
 отдаления присутствуют.
 
-![https://pp.userapi.com/c845521/v845521737/14f1da/OGsYmIKYZlQ.jpg](media/337b2d5c2521dd5f2f21e33093649ae9.jpg)
+![img5](https://i.imgur.com/733Ec5H.png)
 
 Камера:
 -------
@@ -71,7 +71,7 @@ SplashScreen
 переключение на камеру для совершения фотографирования, сохранение фотографии в
 альбом.
 
-![https://pp.userapi.com/c850632/v850632089/8c414/Yk3LbYHgxXM.jpg](media/9add9e15febe76072d720618414b2b7f.jpg)
+![img6](https://i.imgur.com/P9ggIg6.png)
 
 Репозитории:
 ------------
@@ -79,7 +79,7 @@ SplashScreen
 При выборе этого пункта меню на экран будет выведен фрагмент со списком всех
 репозиториев, имеющихся у залогинившегося пользователя.
 
-![https://pp.userapi.com/c845524/v845524300/17c3be/tdSGLrCwKUk.jpg](media/f5c0884c7ebcba71362402378c42961e.jpg)
+![img7](https://i.imgur.com/Q6TxrkI.png)
 
 Контакты:
 ---------
@@ -89,14 +89,14 @@ SplashScreen
 
 **Графический макет программы**
 
-![](media/a0636c7746103cbabf93a713257c90d8.png)
+![img8](https://i.imgur.com/lxKyKal.png)
 
 **Краткое описание используемых шаблонов проектирования**
 
 В данном проекте применяется шаблон проектирования Model-View-Presenter, с общим
 принципом реализации, показанным на блок-схеме ниже.
 
-![](media/13929fdc2d68c2f1ab16195f00e83d09.png)
+![img9](https://i.imgur.com/RuxzBfA.png)
 
 В роли view, в общем виде, является фрагмент программы - SensorFragment, который
 предоставляет все необходимые методы через интерфейс ISensorFragmentActivity
