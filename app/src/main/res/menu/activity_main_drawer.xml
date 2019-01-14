@@ -18,12 +18,20 @@
             android:title="Camera" />
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/content"
             android:title="Reposit" />
         <item
             android:id="@+id/nav_contacts"
             android:icon="@drawable/ic_menu_send"
             android:title="Contacts" />
+        <item
+            android:id="@+id/nav_info"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Info" />
+        <item
+            android:id="@+id/nav_finish"
+            android:icon="@drawable/ic_action_exit"
+            android:title="Finish" />
     </group>
 
 </menu>

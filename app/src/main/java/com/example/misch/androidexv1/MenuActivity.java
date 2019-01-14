@@ -3,9 +3,9 @@ package com.example.misch.androidexv1;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,14 +20,15 @@ import com.example.misch.androidexv1.cameraAPI.SensorFragment;
 import com.example.misch.androidexv1.contactsAPI.ContactsFragment;
 import com.example.misch.androidexv1.gitHubAuth.GitHubRepoListFragment;
 import com.example.misch.androidexv1.googleMapAPI.GogleMap;
+import com.example.misch.androidexv1.infoAPI.InfoPresenter;
 
 import java.util.ArrayList;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CalculatorFragment.OnFragmentInteractionListener,
         SensorFragment.OnFragmentInteractionListener,GogleMap.OnFragmentInteractionListener,
-        GitHubRepoListFragment.OnFragmentInteractionListener{
-
+        GitHubRepoListFragment.OnFragmentInteractionListener, InfoPresenter.OnFragmentInteractionListener{
+    private TextView username;
 
     public static Context contextOfApplication;
     public static Context getContextOfApplication()
@@ -35,8 +36,6 @@ public class MenuActivity extends AppCompatActivity
         return contextOfApplication;
     }
     public static ArrayList<String> repoList;
-
-    private TextView username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +82,7 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -90,74 +90,46 @@ public class MenuActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+        Fragment fragment = new Fragment();
+        Class FragmentClass = null;
         int id = item.getItemId();
         if (id == R.id.nav_calculator) {
-            Fragment fragment = new Fragment();
-            Class FragmentClass = CalculatorFragment.class;
-            try{
-                fragment = (Fragment) FragmentClass.newInstance();
-            }catch (IllegalAccessException | InstantiationException e){
-                e.getLocalizedMessage();
-            }
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container,fragment).commit();
-            item.setChecked(true);
+            FragmentClass = CalculatorFragment.class;
             setTitle(item.getTitle());
         } else if (id == R.id.nav_map) {
-            Class google = GogleMap.class;
+            FragmentClass = GogleMap.class;
             Fragment mMapFragment = null;
-            try {
-                mMapFragment = (Fragment) google.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
-            }
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container,mMapFragment).commit();
             item.setChecked(true);
             setTitle(item.getTitle());
         } else if (id == R.id.nav_camera) {
-
-            Fragment fragment = new Fragment();
-            Class FragmentClass = SensorFragment.class;
-            try{
-                fragment = (Fragment) FragmentClass.newInstance();
-            }catch (IllegalAccessException | InstantiationException e){
-                e.getLocalizedMessage();
-            }
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container,fragment).commit();
-            item.setChecked(true);
+            FragmentClass = SensorFragment.class;
             setTitle(item.getTitle());
-
+        } else if (id == R.id.nav_info) {
+            FragmentClass = InfoPresenter.class;
+            setTitle(item.getTitle());
         } else if (id == R.id.nav_manage) {
-            Fragment fragment = null;
-            Class FragmentClass = GitHubRepoListFragment.class;
+            FragmentClass = GitHubRepoListFragment.class;
             repoList = getIntent().getStringArrayListExtra("repoList");
-
-            try {
-                fragment = (Fragment) FragmentClass.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.getLocalizedMessage();
-            }
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container,fragment).commit();
-            item.setChecked(true);
             setTitle(item.getTitle());
-
         } else if (id == R.id.nav_contacts) {
-            Fragment fragment = new Fragment();
-            Class FragmentClass = ContactsFragment.class;
-            try{
-                fragment = (Fragment) FragmentClass.newInstance();
-            }catch (IllegalAccessException | InstantiationException e){
-                e.getLocalizedMessage();
-            }
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.container,fragment).commit();
-            item.setChecked(true);
+            FragmentClass = ContactsFragment.class;
             setTitle(item.getTitle());
+        } else if (id == R.id.nav_finish) {
+            finish();
+            System.exit(0);
+        }else {
+            return false;
         }
 
+        try {
+            fragment = (Fragment) FragmentClass.newInstance();
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.getLocalizedMessage();
+        }
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.container,fragment).commit();
+        item.setChecked(true);
+        setTitle(item.getTitle());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
