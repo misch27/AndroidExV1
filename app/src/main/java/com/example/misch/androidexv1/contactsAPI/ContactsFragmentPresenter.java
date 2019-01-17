@@ -1,9 +1,14 @@
 package com.example.misch.androidexv1.contactsAPI;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 
@@ -24,6 +29,11 @@ public class ContactsFragmentPresenter implements IContactsFragmentPresenter {
     public ContactsFragmentPresenter(ContactsFragment contactsFragment) {
         iContactsFragmentActivity = contactsFragment;
         applicationContext = contactsFragment.getApplicationContext();
+
+    }
+
+    //вынесла прочесываение контактов в отдельный метод
+    public void getContacts(){
         ArrayAdapter<Contact> adapter = new ContactAdapter(applicationContext);
         //запрос к базе данных за контактами
         HashMap<Integer, ArrayList<String>> phones = new HashMap<>();
@@ -70,7 +80,6 @@ public class ContactsFragmentPresenter implements IContactsFragmentPresenter {
         pCur.close();
         iContactsFragmentActivity.setAdapterList(adapter);
     }
-
 }
 
 

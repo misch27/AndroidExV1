@@ -1,10 +1,13 @@
 package com.example.misch.androidexv1.contactsAPI;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ListFragment;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -13,24 +16,17 @@ import android.widget.TextView;
 import com.example.misch.androidexv1.MenuActivity;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ContactsFragment extends ListFragment implements IContactsFragmentActivity{
-
 
     private TextView contactName;
     private TextView contactNumber;
-    private static final List<Contact> contacts = new ArrayList<>();
+
     private Context applicationContext;
     private IContactsFragmentPresenter iContactsFragmentPresenter;
     private ContentResolver cr;
-    private static final String CONTACT_ID = ContactsContract.Contacts._ID;
-    private static final String DISPLAY_NAME = ContactsContract.Contacts.DISPLAY_NAME;
 
-    private static final String HAS_PHONE_NUMBER = ContactsContract.Contacts.HAS_PHONE_NUMBER;
-    private static final String PHONE_NUMBER = ContactsContract.CommonDataKinds.Phone.NUMBER;
-    private static final String PHONE_CONTACT_ID = ContactsContract.CommonDataKinds.Phone.CONTACT_ID;
+    public static final int REQUEST_CODE_PERMISSION_READ_CONTACTS = 11;
+
 
 
 
@@ -42,6 +38,15 @@ public class ContactsFragment extends ListFragment implements IContactsFragmentA
         if (iContactsFragmentPresenter == null) {
             iContactsFragmentPresenter = new ContactsFragmentPresenter(this);
         }
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            int permissionStatus = applicationContext.checkSelfPermission(Manifest.permission.READ_CONTACTS);
+            if(permissionStatus == PackageManager.PERMISSION_DENIED){
+                requestPermissions(new String[] {Manifest.permission.READ_CONTACTS},
+                        REQUEST_CODE_PERMISSION_READ_CONTACTS);
+            } else {
+                iContactsFragmentPresenter.getContacts();
+            }
+        }
     }
 
     @Override
@@ -49,6 +54,15 @@ public class ContactsFragment extends ListFragment implements IContactsFragmentA
         return applicationContext;
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,@NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == REQUEST_CODE_PERMISSION_READ_CONTACTS && grantResults.length>0){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                iContactsFragmentPresenter.getContacts();
+            }
+        }
+    }
     @Override
     public void setAdapterList(ArrayAdapter<Contact> adapter) {
         setListAdapter(adapter);

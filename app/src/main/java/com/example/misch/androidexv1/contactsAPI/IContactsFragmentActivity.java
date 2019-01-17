@@ -8,7 +8,7 @@ public interface IContactsFragmentActivity {
 
     public Context getApplicationContext();
 
-    void setAdapterList (ArrayAdapter<Contact> adapter);
+    void setAdapterList(ArrayAdapter<Contact> adapter);
 
     public ContentResolver getContentResolver();
 
