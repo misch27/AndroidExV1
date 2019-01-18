@@ -1,8 +1,10 @@
 package com.example.misch.androidexv1.cameraAPI;
 
+import android.Manifest;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -11,13 +13,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.misch.androidexv1.BuildConfig;
 import com.example.misch.androidexv1.MenuActivity;
@@ -36,21 +41,12 @@ import static android.app.Activity.RESULT_OK;
 import static android.support.v4.content.FileProvider.getUriForFile;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SensorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SensorFragment extends Fragment implements ISensorFragmentActivity {
-    // TODO: Rename parameter arguments, choose names that match
+
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private ISensorFragmentPresenter iSensorFragmentPresenter;
     private String mParam1;
     private String mParam2;
@@ -59,6 +55,8 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
     private TextView textParamTwo;
     private TextView textParamTree;
     private TextView textNameOfSensor;
+    private Button takePhotoButton;
+    private Button savePhotoButton;
     private static final int CAMERA_REQUEST = 0;
     private Uri selectedPhotoPath = null;
     private File cacheImg = null;
@@ -66,7 +64,12 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
     private Context applicationContext;
     private Sensor defSensor;
     private SensorManager sensorManager;
+    private int permissionStatusForWES;
+    private int permissionStatusForC;
 
+    public static final int REQUEST_CODE_PERMISSION_WRITE_EXTERNAL_STORAGE = 122;
+    public static final int REQUEST_CODE_PERMISSION_CAMERA = 123;
+    public static final int REQUEST_CODE_PERMISSION_ALL = 124;
 
     private OnFragmentInteractionListener mListener;
 
@@ -74,15 +77,6 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SensorFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SensorFragment newInstance(String param1, String param2) {
         SensorFragment fragment = new SensorFragment();
         Bundle args = new Bundle();
@@ -107,23 +101,54 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         View view = inflater.inflate(R.layout.activity_sensor, container, false);
         applicationContext = MenuActivity.getContextOfApplication();
         applicationContext.getContentResolver();
-        view.findViewById(R.id.takePhotoButton).setOnClickListener(new onTakePictureButtonClick());
-        view.findViewById(R.id.savePhotoButton).setOnClickListener(new onSavePictureButtonClick());
+        takePhotoButton = view.findViewById(R.id.takePhotoButton);
+        takePhotoButton.setOnClickListener(new onTakePictureButtonClick());
+        takePhotoButton.setEnabled(false);
+        savePhotoButton = view.findViewById(R.id.savePhotoButton);
+        savePhotoButton.setOnClickListener(new onSavePictureButtonClick());
+        savePhotoButton.setEnabled(false);
         imageView = view.findViewById(R.id.imageView);
         textParamOne = view.findViewById(R.id.textView_data1);
         textParamTwo = view.findViewById(R.id.textView_data2);
         textParamTree = view.findViewById(R.id.textView_data3);
         textNameOfSensor = view.findViewById(R.id.textView_nameOfSensor);
         sensorManager = (SensorManager) applicationContext.getSystemService(Context.SENSOR_SERVICE);
-        //TODO Поменять кому-то гироскоп на любой другой тип сенсора. Я возьму освещенность
         defSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         if (iSensorFragmentPresenter == null) {
             iSensorFragmentPresenter = new SensorFragmentPresenter(this);
         }
 
-        // Inflate the layout for this fragment
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            permissionStatusForWES = applicationContext.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            permissionStatusForC = applicationContext.checkSelfPermission(Manifest.permission.CAMERA);
+            if(permissionStatusForWES == PackageManager.PERMISSION_DENIED || permissionStatusForC == PackageManager.PERMISSION_DENIED){
+                requestPermissions(new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA},
+                        REQUEST_CODE_PERMISSION_ALL);
+            }
+
+            if((permissionStatusForC == PackageManager.PERMISSION_GRANTED)&&(permissionStatusForWES == PackageManager.PERMISSION_GRANTED)){
+                takePhotoButton.setEnabled(true);
+            }
+        }
+
+
         return view;
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == REQUEST_CODE_PERMISSION_ALL && grantResults.length>0){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED){
+                takePhotoButton.setEnabled(true);
+            }else {
+                takePhotoButton.setEnabled(false);
+            }
+        }
+
+    }
+
     private final SensorEventListener workingSensorEventListener = new SensorEventListener() {
 
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -153,7 +178,6 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         }
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -177,36 +201,33 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
+
         void onFragmentInteraction(Uri uri);
     }
 
     @Override
-    //TODO Обработать результат не окей, чтоб не срабатывало сохранение непонятно чего.
+
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == CAMERA_REQUEST && resultCode == RESULT_OK){
-            imageView.setImageResource(0);
-            imageView.setImageURI(selectedPhotoPath);
+        if(requestCode == CAMERA_REQUEST){
+           if(resultCode == RESULT_OK){
+               imageView.setImageResource(0);
+               imageView.setImageURI(selectedPhotoPath);
+               savePhotoButton.setEnabled(true);
+           } else{
+               savePhotoButton.setEnabled(false);
+               Toast toast = Toast.makeText(getApplicationContext(),
+                       "Что-то пошло не так", Toast.LENGTH_SHORT);
+               toast.show();
+           }
         }
     }
 
     public Uri getSelectedPhotoPath() {
         return selectedPhotoPath;
     }
-
 
     public ImageView getImageView() {
         return imageView;
@@ -215,7 +236,6 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
     public void setImageView(ImageView imageView) {
         this.imageView = imageView;
     }
-
 
     public void setSelectedPhotoPath(Uri selectedPhotoPath) {
         this.selectedPhotoPath = selectedPhotoPath;
@@ -234,12 +254,10 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         startActivityForResult(intent, CAMERA_REQUEST);
     }
 
-
     public Context getApplicationContext() {
         return applicationContext;
     }
 
-    //для корневой создать индексирование фотоальбомом
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri contentUri = selectedPhotoPath;
@@ -298,7 +316,6 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
 
     class onSavePictureButtonClick implements View.OnClickListener {
         public void onClick(View view) {
-            //вытащить файл, вытащить дату и время, сохранить в основной папке
             if (selectedPhotoPath != null) {
                 File source = cacheImg;
                 File file = new File(applicationContext.getFilesDir(),"images");
@@ -310,18 +327,16 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
                     e.printStackTrace();
                     return;
                 }
-                //индексирование картинки галереей
                 galleryAddPic();
-                //очистить вьюху
                 imageView.setImageResource(0);
                 selectedPhotoPath = null;
             } else {
-                //сказать, чтоб сделали фотку
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "Нужно сделать фото", Toast.LENGTH_SHORT);
+                toast.show();
             }
 
         }
     }
-    /*
-      Разобраться, почему временные файлы не удаляются, этож хрень какая-то.
-     */
+
 }
