@@ -102,10 +102,10 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         applicationContext = MenuActivity.getContextOfApplication();
         applicationContext.getContentResolver();
         takePhotoButton = view.findViewById(R.id.takePhotoButton);
-        takePhotoButton.setOnClickListener(new onTakePictureButtonClick());
+        takePhotoButton.setOnClickListener(new TakePicture());
         takePhotoButton.setEnabled(false);
         savePhotoButton = view.findViewById(R.id.savePhotoButton);
-        savePhotoButton.setOnClickListener(new onSavePictureButtonClick());
+        savePhotoButton.setOnClickListener(new SavePicture());
         savePhotoButton.setEnabled(false);
         imageView = view.findViewById(R.id.imageView);
         textParamOne = view.findViewById(R.id.textView_data1);
@@ -285,7 +285,7 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         }
     }
 
-    class onTakePictureButtonClick implements View.OnClickListener {
+    class TakePicture implements View.OnClickListener {
         //работа с камерой
         public void onClick(View view) {
 
@@ -314,7 +314,7 @@ public class SensorFragment extends Fragment implements ISensorFragmentActivity 
         }
     }
 
-    class onSavePictureButtonClick implements View.OnClickListener {
+    class SavePicture implements View.OnClickListener {
         public void onClick(View view) {
             if (selectedPhotoPath != null) {
                 File source = cacheImg;

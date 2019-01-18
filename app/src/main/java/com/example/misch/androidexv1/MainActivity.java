@@ -1,6 +1,7 @@
 package com.example.misch.androidexv1;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         int SPLASH_DISPLAY_LENGHT = 2000;
         new Handler().postDelayed(new Runnable() {
             @Override

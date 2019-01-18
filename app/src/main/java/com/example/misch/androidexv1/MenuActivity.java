@@ -1,7 +1,9 @@
 package com.example.misch.androidexv1;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -41,6 +43,7 @@ public class MenuActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -115,8 +118,11 @@ public class MenuActivity extends AppCompatActivity
             FragmentClass = ContactsFragment.class;
             setTitle(item.getTitle());
         } else if (id == R.id.nav_finish) {
-            finish();
-            System.exit(0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                finishAndRemoveTask();
+            } else {
+                finishAffinity();
+            }
         }else {
             return false;
         }

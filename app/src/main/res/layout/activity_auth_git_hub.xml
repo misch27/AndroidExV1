@@ -30,7 +30,8 @@
             android:id="@+id/login_data"
             android:layout_width="270dp"
             android:layout_height="match_parent"
-            android:hint="login" />
+            android:hint="login"
+            android:imeOptions="actionNext"/>
     </android.support.design.widget.TextInputLayout>
 
     <Button

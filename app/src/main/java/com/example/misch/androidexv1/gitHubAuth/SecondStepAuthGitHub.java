@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +26,7 @@ public class SecondStepAuthGitHub extends Activity implements ISecondStepAuthAct
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth2_git_hub);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         login = getIntent().getExtras().getString("login");
         password = getIntent().getExtras().getString("password");
         twoAuth = (TextInputEditText) findViewById(R.id.dualAuth);
@@ -66,6 +68,7 @@ public class SecondStepAuthGitHub extends Activity implements ISecondStepAuthAct
             intent.putExtra("login", login);
             intent.putExtra("repoList", repoList);
             startActivity(intent);
+            this.finish();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Ошибка авторизации. Неверный код второго фактора.")

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.support.design.widget.TextInputEditText;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,7 @@ public class AuthGitHub extends Activity implements IAuthActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_auth_git_hub);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         login = (TextInputEditText) findViewById(R.id.login_data);
         password = (TextInputEditText) findViewById(R.id.password_data);
         if (iAuthPresenter == null) {
@@ -33,7 +35,6 @@ public class AuthGitHub extends Activity implements IAuthActivity{
     @Override
     protected void onRestart() {
         super.onRestart();
-
     }
 
     @Override
@@ -89,6 +90,7 @@ public class AuthGitHub extends Activity implements IAuthActivity{
                 intent.putExtra("login", login);
                 intent.putExtra("repoList", repoList);
                 startActivity(intent);
+                this.finish();
             }
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
