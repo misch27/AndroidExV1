@@ -10,10 +10,7 @@ interface ISecondStepAuthActivity extends IAuth{
 
     public String get2Auth();
 
-    void setLogin(String name);
-
     void setRepo(ArrayList<String> repoList);
 
     void activateNextActivity(String login, String password, Boolean auth2);
-
 }

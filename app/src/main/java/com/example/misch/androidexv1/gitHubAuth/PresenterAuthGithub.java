@@ -9,6 +9,7 @@ public class PresenterAuthGithub implements IAuthPresenter {
 
     @Override
     public void onAuthButtonClick() {
+        GitHubConnection.clearValues();
         GitHubConnection connection = new GitHubConnection(iAuthActivity);
         connection.connectToGithub();
     }

@@ -1,9 +1,12 @@
 package com.example.misch.androidexv1.gitHubAuth;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 
 import com.example.misch.androidexv1.MenuActivity;
@@ -13,6 +16,7 @@ import java.util.ArrayList;
 
 public class AuthGitHub extends Activity implements IAuthActivity{
     private IAuthPresenter iAuthPresenter;
+    private ProgressDialog load;
     private TextInputEditText login, password;
     private ArrayList<String> repoList;
     @Override
@@ -26,9 +30,19 @@ public class AuthGitHub extends Activity implements IAuthActivity{
         }
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+    }
 
     @Override
     public void onAuthButtonClick(View view) {
+        load = new ProgressDialog(this);
+        load.setMessage("Авторизация..");
+        load.setMax(2048);
+        load.show();
+        load.setIndeterminate(true);
         iAuthPresenter.onAuthButtonClick();
 
     }
@@ -61,15 +75,9 @@ public class AuthGitHub extends Activity implements IAuthActivity{
         this.repoList = repoList;
     }
 
-
-    @Override
-    public void setLogin(String name) {
-        login.setText(name);
-    }
-
-
     @Override
     public void activateNextActivity(String login, String password, Boolean hasErrors) {
+        load.dismiss();
         if (!hasErrors) {
             if (GitHubConnection.isAuth2Factor()) {
                 Intent intent = new Intent(AuthGitHub.this, SecondStepAuthGitHub.class);
@@ -82,6 +90,19 @@ public class AuthGitHub extends Activity implements IAuthActivity{
                 intent.putExtra("repoList", repoList);
                 startActivity(intent);
             }
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Ошибка авторизации. Неверные логин/пароль.")
+                    .setCancelable(false)
+                    .setNegativeButton("ОК",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
     }
+
 }

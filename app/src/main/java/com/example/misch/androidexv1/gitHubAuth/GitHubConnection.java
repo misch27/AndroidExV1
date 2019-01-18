@@ -16,11 +16,17 @@ import java.util.ArrayList;
 class GitHubConnection {
     private static IAuth iAuth;
     private static boolean auth2Factor = false;
+
     GitHubConnection(IAuth iAuth) {
         GitHubConnection.iAuth = iAuth;
     }
-   void connectToGithub () {
-        String encoding =  Base64.encodeToString(
+
+    public static void clearValues() {
+        auth2Factor = false;
+    }
+
+    void connectToGithub() {
+        String encoding = Base64.encodeToString(
                 (iAuth.getLogin() + ":" + iAuth.getPassword()).getBytes(),
                 Base64.DEFAULT);
         AuthAsyncTask authAsyncTask = new AuthAsyncTask();
@@ -34,14 +40,10 @@ class GitHubConnection {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            if (!hasErrors || auth2Factor) {
-                String login = iAuth.getLogin();
-                String password = iAuth.getPassword();
-                iAuth.setRepo(repoList);
-                iAuth.setLogin(login);
-                iAuth.activateNextActivity(login, password, hasErrors);
-
-            }
+            String login = iAuth.getLogin();
+            String password = iAuth.getPassword();
+            iAuth.setRepo(repoList);
+            iAuth.activateNextActivity(login, password, hasErrors);
         }
 
         @Override

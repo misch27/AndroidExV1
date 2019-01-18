@@ -15,7 +15,5 @@ interface IAuthActivity extends IAuth {
 
     void setRepo(ArrayList<String> repoList);
 
-    void setLogin(String name);
-
     void activateNextActivity(String login, String password, Boolean auth2);
 }
